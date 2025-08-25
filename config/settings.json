@@ -1,0 +1,30 @@
+{
+    "application": {
+        "name": "PDF处理器",
+        "version": "1.0.0",
+        "author": "Unknown",
+        "theme": "dark"
+    },
+    "paths": {
+        "default_output_dir": "./output",
+        "temp_dir": "./temp",
+        "log_dir": "./logs",
+        "cache_dir": "./cache"
+    },
+    "performance": {
+        "max_threads": 4,
+        "memory_limit": "1GB",
+        "enable_cache": true
+    },
+    "ui": {
+        "language": "zh_CN",
+        "window_width": 1200,
+        "window_height": 800,
+        "enable_dark_theme": true
+    },
+    "features": {
+        "enable_ocr": true,
+        "enable_compression": true,
+        "enable_comparison": true
+    }
+}
