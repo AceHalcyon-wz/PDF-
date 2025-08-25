@@ -15,13 +15,33 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
+    - name: 检查目录结构
+      run: |
+        pwd
+        ls -la
+        echo "检查requirements.txt是否存在:"
+        if [ -f "requirements.txt" ]; then
+          echo "requirements.txt文件存在"
+          cat requirements.txt
+        else
+          echo "ERROR: requirements.txt文件不存在"
+        fi
     - name: 安装依赖
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        if [ -f "requirements.txt" ]; then
+          pip install -r requirements.txt
+        else
+          echo "使用pyproject.toml安装依赖"
+          pip install -e .
+        fi
     - name: 安装测试依赖
       run: |
-        pip install -r requirements-dev.txt
+        if [ -f "requirements-dev.txt" ]; then
+          pip install -r requirements-dev.txt
+        else
+          pip install pytest pytest-qt
+        fi
     - name: 运行测试
       run: |
         python -m unittest discover tests
