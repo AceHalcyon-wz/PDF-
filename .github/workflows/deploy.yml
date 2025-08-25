@@ -22,6 +22,7 @@ jobs:
         echo "当前工作目录: $(pwd)"
         echo "目录内容:"
         ls -la
+      shell: bash
     - name: 安装依赖
       run: |
         python -m pip install --upgrade pip
@@ -33,26 +34,32 @@ jobs:
           pip install -e .
         fi
         pip install pyinstaller
+      shell: bash
     - name: 构建可执行文件 (Windows)
       if: matrix.os == 'windows-latest'
       run: |
         pyinstaller --name=PDF处理器 --onefile --windowed --add-data="ui;ui" --add-data="core;core" --add-data="utils;utils" --add-data="config;config" --add-data="plugins;plugins" --hidden-import=PyQt5.sip --hidden-import=PyQt5.QtCore --hidden-import=PyQt5.QtGui --hidden-import=PyQt5.QtWidgets --hidden-import=PyPDF2 --hidden-import=reportlab main.py
+      shell: bash
     - name: 构建可执行文件 (Unix)
       if: matrix.os != 'windows-latest'
       run: |
         pyinstaller --name=PDF处理器 --onefile --windowed --add-data="ui:ui" --add-data="core:core" --add-data="utils:utils" --add-data="config:config" --add-data="plugins:plugins" --hidden-import=PyQt5.sip --hidden-import=PyQt5.QtCore --hidden-import=PyQt5.QtGui --hidden-import=PyQt5.QtWidgets --hidden-import=PyPDF2 --hidden-import=reportlab main.py
+      shell: bash
     - name: 重命名可执行文件 (Windows)
       if: matrix.os == 'windows-latest'
       run: |
         mv dist/PDF处理器.exe dist/PDF处理器-${{ matrix.os }}.exe
+      shell: bash
     - name: 重命名可执行文件 (Unix)
       if: matrix.os == 'ubuntu-latest'
       run: |
         mv dist/PDF处理器 dist/PDF处理器-${{ matrix.os }}
+      shell: bash
     - name: 重命名可执行文件 (macOS)
       if: matrix.os == 'macos-latest'
       run: |
         mv dist/PDF处理器 dist/PDF处理器-${{ matrix.os }}
+      shell: bash
     - name: 上传构建产物
       uses: actions/upload-artifact@v3
       with:
