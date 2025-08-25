@@ -8,5 +8,4 @@
 
 from setuptools import setup
 
-# 采用最小化 setup.py，所有配置都在 pyproject.toml 中定义
 setup()
