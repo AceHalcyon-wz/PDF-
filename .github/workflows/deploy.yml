@@ -16,7 +16,7 @@ jobs:
     - name: 设置Python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.10"
+        python-version: "3.13"
     - name: 检查目录结构
       run: |
         echo "当前工作目录: $(pwd)"
@@ -33,12 +33,12 @@ jobs:
     - name: 构建可执行文件 (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        pyinstaller --name=PDF处理器 --onefile --windowed --add-data="ui;ui" --add-data="core;core" --add-data="utils;utils" --add-data="config;config" --add-data="plugins;plugins" --hidden-import=PyQt5.sip --hidden-import=PyQt5.QtCore --hidden-import=PyQt5.QtGui --hidden-import=PyQt5.QtWidgets --hidden-import=PyPDF2 --hidden-import=reportlab main.py
+        pyinstaller --name=PDF处理器 --onefile --windowed --add-data="ui;ui" --add-data="core;core" --add-data="utils;utils" --add-data="config;config" --add-data="plugins;plugins" --hidden-import=PyQt5.sip --hidden-import=PyQt5.QtCore --hidden-import=PyQt5.QtGui --hidden-import=PyQt5.QtWidgets --hidden-import=pypdf --hidden-import=reportlab main.py
       shell: bash
     - name: 构建可执行文件 (Unix)
       if: matrix.os != 'windows-latest'
       run: |
-        pyinstaller --name=PDF处理器 --onefile --windowed --add-data="ui:ui" --add-data="core:core" --add-data="utils:utils" --add-data="config:config" --add-data="plugins:plugins" --hidden-import=PyQt5.sip --hidden-import=PyQt5.QtCore --hidden-import=PyQt5.QtGui --hidden-import=PyQt5.QtWidgets --hidden-import=PyPDF2 --hidden-import=reportlab main.py
+        pyinstaller --name=PDF处理器 --onefile --windowed --add-data="ui:ui" --add-data="core:core" --add-data="utils:utils" --add-data="config:config" --add-data="plugins:plugins" --hidden-import=PyQt5.sip --hidden-import=PyQt5.QtCore --hidden-import=PyQt5.QtGui --hidden-import=PyQt5.QtWidgets --hidden-import=pypdf --hidden-import=reportlab main.py
       shell: bash
     - name: 重命名可执行文件 (Windows)
       if: matrix.os == 'windows-latest'

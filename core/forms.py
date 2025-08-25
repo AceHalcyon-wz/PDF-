@@ -12,7 +12,7 @@
 """
 
 import os
-from PyPDF2 import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 import json
 from core.interface import ModuleInterface
 
@@ -70,44 +70,41 @@ class FormEngine(ModuleInterface):
             self.log_error(f"表单填写失败: {str(e)}")
             raise Exception(f"表单填写失败: {str(e)}")
 
-    def extract_form_data(self, input_path, output_path):
+    def extract_form_data(self, input_path):
         """
         提取表单数据
         
         Args:
             input_path (str): 输入PDF表单文件路径
-            output_path (str): 输出JSON文件路径
+            
+        Returns:
+            dict: 表单数据
         """
         try:
             self.log_info(f"开始提取表单数据: {input_path}")
             
-            # 确保输出目录存在
-            output_dir = os.path.dirname(output_path)
-            if output_dir and not os.path.exists(output_dir):
-                os.makedirs(output_dir)
-                
             reader = PdfReader(input_path)
             
-            # 提取表单字段数据
-            form_fields = {}
-            
-            # 使用 PyPDF2 内置方法获取表单字段
-            if reader.trailer["/Root"].get("/AcroForm"):
-                form = reader.trailer["/Root"]["/AcroForm"].get_object()
+            # 提取表单字段
+            if "/AcroForm" in reader.trailer["/Root"]:
+                form = reader.trailer["/Root"]["/AcroForm"]
                 if "/Fields" in form:
                     fields = form["/Fields"]
+                    form_data = {}
+                    
                     for field in fields:
                         field_obj = field.get_object()
-                        if "/T" in field_obj and "/V" in field_obj:
-                            field_name = field_obj["/T"]
-                            field_value = field_obj["/V"]
-                            form_fields[field_name] = field_value
+                        field_name = field_obj.get("/T")
+                        field_value = field_obj.get("/V")
+                        
+                        if field_name:
+                            form_data[field_name] = field_value
+                            
+                    self.log_info(f"表单数据提取完成: {len(form_data)}个字段")
+                    return form_data
             
-            # 保存表单数据到JSON文件
-            with open(output_path, 'w', encoding='utf-8') as json_file:
-                json.dump(form_fields, json_file, ensure_ascii=False, indent=2)
-                
-            self.log_info(f"表单数据提取完成: {output_path}")
+            self.log_info("未找到表单字段")
+            return {}
         except Exception as e:
             self.log_error(f"表单数据提取失败: {str(e)}")
             raise Exception(f"表单数据提取失败: {str(e)}")

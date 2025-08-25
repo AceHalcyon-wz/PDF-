@@ -11,7 +11,7 @@
 3. 实现标准接口方法
 """
 
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 import os
 from utils.performance_optimizer import PerformanceOptimizer
 from collections import Counter
@@ -75,12 +75,12 @@ class AnalyticsEngine(ModuleInterface):
             self.log_error(f"获取文档统计信息失败: {str(e)}")
             raise Exception(f"获取文档统计信息失败: {str(e)}")
 
-    def generate_processing_report(self, processing_data, output_path):
+    def generate_processing_report(self, input_path, output_path):
         """
         生成处理报告
         
         Args:
-            processing_data (dict): 处理数据
+            input_path (str): 输入PDF文件路径
             output_path (str): 输出报告文件路径
         """
         try:

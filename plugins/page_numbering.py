@@ -6,7 +6,7 @@
 """
 
 import os
-from PyPDF2 import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import io
@@ -74,13 +74,9 @@ class PageNumberingPlugin(PluginInterface):
                 # 添加到输出PDF
                 writer.add_page(page)
             
-            # 保存输出PDF
+            # 保存结果
             with open(output_path, 'wb') as output_file:
                 writer.write(output_file)
-                
-            return True
-        except Exception as e:
-            raise Exception(f"添加页面编号失败: {str(e)}")
 
     def _get_position_coordinates(self, position, width, height):
         """
@@ -103,19 +99,4 @@ class PageNumberingPlugin(PluginInterface):
             "bottom_left": (margin, margin),
             "bottom_center": (width / 2, margin),
             "bottom_right": (width - margin, margin)
-        }
-        
-        return positions.get(position, positions["bottom_right"])
-
-    def get_info(self):
-        """
-        获取插件信息
-        
-        Returns:
-            dict: 插件信息
-        """
-        return {
-            "name": self.name,
-            "version": self.version,
-            "description": self.description
         }
